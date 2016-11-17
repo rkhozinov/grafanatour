@@ -1,0 +1,28 @@
+grafana:
+  image: grafana/grafana
+  restart: always
+  environment:
+    - GF_SECURITY_ADMIN_PASSWORD=admin
+    - GF_INSTALL_PLUGINS=grafana-clock-panel
+  ports:
+    - "3000:3000"
+  volumes_from:
+    - grafana-storage
+
+grafana-storage:
+  image: busybox:latest
+  volumes:
+    - /var/lib/grafana
+
+prometheus-storage:
+  image: busybox:latest
+  volumes:
+    - ./prometheus/var:/prometheus
+    - ./prometheus/etc:/etc/prometheus 
+
+prometheus:
+  image: prom/prometheus
+  ports:
+    - "9090:9090"
+  volumes_from:
+    - prometheus-storage 
